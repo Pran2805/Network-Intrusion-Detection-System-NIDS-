@@ -1,0 +1,63 @@
+# ----------------------------
+# Node.js / Backend
+# ----------------------------
+backend/node_modules/
+backend/.env
+backend/dist/
+backend/coverage/
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+
+# ----------------------------
+# Python / ML Engine
+# ----------------------------
+ml-service/venv/
+ml-service/__pycache__/
+ml-service/.env
+ml-service/*.pyc
+ml-service/*.pyo
+ml-service/*.pyd
+ml-service/.python-version
+ml-service/.ipynb_checkpoints/
+ml-service/models/*.h5
+ml-service/models/*.pkl
+
+# ----------------------------
+# React / Frontend
+# ----------------------------
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.DS_Store
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# ----------------------------
+# OS / Editor Files
+# ----------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ----------------------------
+# Docker / Logs
+# ----------------------------
+docker/*.log
+docker/*.pid
+*.log
+*.pid
+
+# ----------------------------
+# General
+# ----------------------------
+.env
+.env.*
+*.local
+*.bak
+*.tmp
+todo.txt
