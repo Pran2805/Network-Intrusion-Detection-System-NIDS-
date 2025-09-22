@@ -23,6 +23,7 @@ ml-service/.ipynb_checkpoints/
 ml-service/models/*.h5
 ml-service/models/*.pkl
 ml-service/dataset/packets.csv
+ml-service/isolation_forest_model.pkl
 
 __pycache__
 

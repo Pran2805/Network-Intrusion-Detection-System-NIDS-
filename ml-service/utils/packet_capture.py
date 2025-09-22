@@ -1,4 +1,3 @@
-# packet_capture.py
 from scapy.all import sniff, IP, TCP, UDP  # type: ignore
 from datetime import datetime
 import pandas as pd
@@ -9,10 +8,9 @@ import joblib
 import threading
 from db.index import insert_alerts
 
-BATCH_SIZE = 50
+BATCH_SIZE = 200
 TEMP = []
 
-# Load or initialize ML model
 try:
     model = joblib.load("isolation_forest_model.pkl")
     print("[*] Loaded pre-trained Isolation Forest model.")
@@ -26,11 +24,9 @@ def process_batch(batch):
     global model_fitted
     df = pd.DataFrame(batch)
     
-    # Show raw packets for terminal
     print("\n[*] Batch Packets:")
     print(df)
     
-    # Extract features
     features_df = extract_features(df)
     print("\n[*] Features:")
     print(features_df)
@@ -39,17 +35,14 @@ def process_batch(batch):
     print("\n[*] Normalized Features:")
     print(features_df)
     
-    # Select only numeric ML features
     X = features_df[['packet_count','avg_size','unique_dst_ips']]
 
-    # Fit model if not fitted yet
     if not model_fitted:
         model.fit(X)
         model_fitted = True
         joblib.dump(model, "isolation_forest_model.pkl")
         print("[*] Model trained on first batch and saved.")
 
-    # Predict anomalies
     preds = model.predict(X)
     features_df['anomaly'] = preds
     anomalies = features_df[features_df['anomaly'] == -1]
@@ -100,8 +93,8 @@ def flush_remaining():
 def start_capture():
     print("[*] Live Packet Capture Started")
     try:
-        # sniff(prn=packet_capture, store=False)  # continuous live capture
-        sniff(prn=packet_capture, count=100) 
+        sniff(prn=packet_capture, store=False)  # continuous live capture
+        # sniff(prn=packet_capture, count=300) 
     except KeyboardInterrupt:
         print("\n[*] Capture stopped by user")
         flush_remaining()
