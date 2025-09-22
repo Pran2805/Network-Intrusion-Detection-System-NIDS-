@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient # type: ignore
 from datetime import datetime
 
 DB_URI = "mongodb://localhost:27017/"

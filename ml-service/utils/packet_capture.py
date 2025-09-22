@@ -7,7 +7,7 @@ from sklearn.ensemble import IsolationForest
 import joblib
 import threading
 from db.index import insert_alerts
-
+from utils.packet_signature import detect_signatures
 BATCH_SIZE = 200
 TEMP = []
 
@@ -53,6 +53,11 @@ def process_batch(batch):
         insert_alerts(anomalies.to_dict('records'))
     else:
         print("[*] No anomalies in this batch.")
+        
+    signature_alerts = detect_signatures(df)
+    if signature_alerts:
+         threading.Thread(target=insert_alerts, args=(signature_alerts,)).start()
+         print(f"[!] {len(signature_alerts)} signature alerts detected and stored.")
 
 def packet_capture(packet):
     if IP in packet:
@@ -80,7 +85,6 @@ def packet_capture(packet):
             "size": len(packet)
         })
 
-        # Process batch if BATCH_SIZE reached
         if len(TEMP) >= BATCH_SIZE:
             threading.Thread(target=process_batch, args=(TEMP.copy(),)).start()
             TEMP.clear()
