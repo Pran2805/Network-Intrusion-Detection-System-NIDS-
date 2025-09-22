@@ -24,6 +24,8 @@ ml-service/models/*.h5
 ml-service/models/*.pkl
 ml-service/dataset/packets.csv
 
+__pycache__
+
 # ----------------------------
 # React / Frontend
 # ----------------------------
