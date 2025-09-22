@@ -22,6 +22,7 @@ ml-service/.python-version
 ml-service/.ipynb_checkpoints/
 ml-service/models/*.h5
 ml-service/models/*.pkl
+ml-service/dataset/packets.csv
 
 # ----------------------------
 # React / Frontend
