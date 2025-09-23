@@ -29,80 +29,15 @@ const Dashboard = () => {
     timeRange: '24h'
   });
 
-  // Simulate WebSocket connection and real-time alerts
   useEffect(() => {
     // Initial demo data
-    const initialAlerts: Alert[] = [
-      {
-        id: '1',
-        timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
-        sourceIP: '192.168.1.105',
-        attackType: 'Port Scan',
-        severity: 'high',
-        description: 'Multiple port scan attempts detected',
-        blocked: true
-      },
-      {
-        id: '2',
-        timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
-        sourceIP: '10.0.0.42',
-        attackType: 'ICMP Flood',
-        severity: 'critical',
-        description: 'High volume ICMP flood attack detected',
-        blocked: true
-      },
-      {
-        id: '3',
-        timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-        sourceIP: '172.16.0.88',
-        attackType: 'Anomalous Traffic',
-        severity: 'medium',
-        description: 'Unusual traffic pattern detected by ML model',
-        blocked: false
-      },
-      {
-        id: '4',
-        timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-        sourceIP: '203.0.113.15',
-        attackType: 'Brute Force',
-        severity: 'high',
-        description: 'SSH brute force attack attempt',
-        blocked: true
-      },
-      {
-        id: '5',
-        timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-        sourceIP: '198.51.100.200',
-        attackType: 'DDoS',
-        severity: 'critical',
-        description: 'Distributed denial of service attack detected',
-        blocked: true
-      }
-    ];
+    const initialAlerts: Alert[] = [];
 
     setAlerts(initialAlerts);
     setIsConnected(true);
 
-    // Simulate real-time alerts
-    const interval = setInterval(() => {
-      const attackTypes = ['Port Scan', 'ICMP Flood', 'Brute Force', 'DDoS', 'Anomalous Traffic', 'SQL Injection'];
-      const severities: Alert['severity'][] = ['critical', 'high', 'medium', 'low'];
-      const ips = ['192.168.1.', '10.0.0.', '172.16.0.', '203.0.113.', '198.51.100.'];
-      
-      const newAlert: Alert = {
-        id: Date.now().toString(),
-        timestamp: new Date().toISOString(),
-        sourceIP: ips[Math.floor(Math.random() * ips.length)] + (Math.floor(Math.random() * 255) + 1),
-        attackType: attackTypes[Math.floor(Math.random() * attackTypes.length)],
-        severity: severities[Math.floor(Math.random() * severities.length)],
-        description: 'Real-time threat detected by IDS system',
-        blocked: Math.random() > 0.3
-      };
+   
 
-      setAlerts(prev => [newAlert, ...prev.slice(0, 49)]); // Keep last 50 alerts
-    }, Math.random() * 10000 + 5000); // Random interval between 5-15 seconds
-
-    return () => clearInterval(interval);
   }, []);
 
   // Apply filters
@@ -138,7 +73,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="p-3 rounded-lg bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30">
@@ -166,7 +100,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
       <StatsCards alerts={alerts} />
 
       {/* Real-time Monitor */}

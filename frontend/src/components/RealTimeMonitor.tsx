@@ -13,14 +13,7 @@ export function RealTimeMonitor({ alerts }: RealTimeMonitorProps) {
   const [alertCount, setAlertCount] = useState(0);
 
   useEffect(() => {
-    if (alerts.length > 0) {
-      const newest = alerts[0];
-      if (!latestAlert || newest.id !== latestAlert.id) {
-        setLatestAlert(newest);
-        setAlertCount(prev => prev + 1);
-      }
-    }
-  }, [alerts, latestAlert]);
+  }, []);
 
   const getSeverityColor = (severity: Alert['severity']) => {
     switch (severity) {

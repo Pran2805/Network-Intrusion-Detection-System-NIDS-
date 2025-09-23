@@ -1,42 +1,49 @@
-import { useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { 
-  PieChart, 
-  Pie, 
-  Cell, 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
-} from 'recharts';
-// import { Card } from "@/components/ui/card";
+  PieChart, Pie, Cell, 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
+} from "recharts";
 import { Badge } from "@/components/ui/badge";
 import type { Alert } from "@/pages/Dashboard";
+import { threatStore } from "@/store/threat.store";
 
 interface ThreatChartProps {
-  alerts: Alert[];
+  alerts?: Alert[];
 }
 
-export function ThreatChart({ alerts }: ThreatChartProps) {
+export function ThreatChart({ alerts: initialAlerts = [] }: ThreatChartProps) {
+  const { getStatistics } = threatStore();
+  const [alerts, setAlerts] = useState<Alert[]>(initialAlerts);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      const data = await getStatistics();
+      setAlerts(data || []);
+      setLoading(false);
+    }
+    fetchData();
+  }, [getStatistics]);
+
   const chartData = useMemo(() => {
-    // Severity distribution for pie chart
+    if (!alerts.length) return { severityData: [], attackTypeData: [] };
+
+    // Severity distribution
     const severityCount = alerts.reduce((acc, alert) => {
       acc[alert.severity] = (acc[alert.severity] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
 
-    const severityData = Object.entries(severityCount).map(([severity, count]) => ({
-      name: severity,
-      value: count,
-      color: severity === 'critical' ? '#ff4444' :
-             severity === 'high' ? '#ff8800' :
-             severity === 'medium' ? '#ffaa00' :
-             '#44ff88'
+    const severityData = ["critical", "high", "medium", "low"].map(sev => ({
+      name: sev,
+      value: severityCount[sev] || 0,
+      color: sev === "critical" ? "#ff4444" :
+             sev === "high" ? "#ff8800" :
+             sev === "medium" ? "#ffaa00" : "#44ff88"
     }));
 
-    // Attack type distribution for bar chart
+    // Attack type distribution
     const attackTypeCount = alerts.reduce((acc, alert) => {
       acc[alert.attackType] = (acc[alert.attackType] || 0) + 1;
       return acc;
@@ -58,7 +65,7 @@ export function ThreatChart({ alerts }: ThreatChartProps) {
           <p className="text-foreground font-semibold">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {`${entry.name}: ${entry.value}`}
+              {`${entry.name}: ${entry.value || 0}`}
             </p>
           ))}
         </div>
@@ -66,6 +73,15 @@ export function ThreatChart({ alerts }: ThreatChartProps) {
     }
     return null;
   };
+
+  // **Empty UI**
+  if (loading) {
+    return <div className="text-center text-muted-foreground py-10">Loading data...</div>;
+  }
+
+  if (!alerts.length) {
+    return <div className="text-center text-muted-foreground py-10">No threat data available</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -77,7 +93,6 @@ export function ThreatChart({ alerts }: ThreatChartProps) {
             {alerts.length} total
           </Badge>
         </div>
-        
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -98,17 +113,14 @@ export function ThreatChart({ alerts }: ThreatChartProps) {
             </PieChart>
           </ResponsiveContainer>
         </div>
-        
+
         {/* Legend */}
         <div className="grid grid-cols-2 gap-2 mt-3">
-          {chartData.severityData.map((entry) => (
+          {chartData.severityData.map(entry => (
             <div key={entry.name} className="flex items-center space-x-2">
-              <div 
-                className="w-3 h-3 rounded-full" 
-                style={{ backgroundColor: entry.color }}
-              />
+              <div className="size-3 rounded-full" style={{ backgroundColor: entry.color }} />
               <span className="text-xs text-muted-foreground capitalize">
-                {entry.name} ({entry.value})
+                {entry.name} ({entry.value || 0})
               </span>
             </div>
           ))}
@@ -118,33 +130,26 @@ export function ThreatChart({ alerts }: ThreatChartProps) {
       {/* Attack Types */}
       <div>
         <h4 className="text-sm font-semibold text-foreground mb-3">Attack Types</h4>
-        
         <div className="h-40">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData.attackTypeData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-              <XAxis 
-                dataKey="name" 
-                tick={{ fontSize: 10, fill: '#888' }}
-                angle={-45}
-                textAnchor="end"
-                height={60}
-              />
-              <YAxis tick={{ fontSize: 10, fill: '#888' }} />
+              <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#888" }} angle={-45} textAnchor="end" height={60} />
+              <YAxis tick={{ fontSize: 10, fill: "#888" }} />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="count" fill="#4488ff" radius={[2, 2, 0, 0]} />
               <Bar dataKey="blocked" fill="#44ff88" radius={[2, 2, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
-        
+
         <div className="flex items-center justify-center space-x-4 mt-2">
           <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-primary rounded" />
+            <div className="size-3 bg-primary rounded" />
             <span className="text-xs text-muted-foreground">Total</span>
           </div>
           <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-success rounded" />
+            <div className="size-3 bg-success rounded" />
             <span className="text-xs text-muted-foreground">Blocked</span>
           </div>
         </div>

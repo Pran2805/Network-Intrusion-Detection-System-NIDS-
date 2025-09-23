@@ -17,13 +17,13 @@ interface NetworkVisualizationProps {
 }
 
 function NetworkNode({ node, onClick }: { node: NetworkNode; onClick: (node: NetworkNode) => void }) {
-  const meshRef = useRef<any>();
-  
+  const meshRef = useRef<any>(0);
+
   const color = useMemo(() => {
     switch (node.type) {
-      case 'server': return '#00ff88'; // Secure green
-      case 'threat': return '#ff4444'; // Critical red
-      default: return '#4488ff'; // Primary blue
+      case 'server': return '#00ff88'; 
+      case 'threat': return '#ff4444'; 
+      default: return '#4488ff';
     }
   }, [node.type]);
 
