@@ -1,1 +1,153 @@
-@import "tailwindcss";
+@import "tailwindcss";          /* v4 core */
+@import "tw-animate-css";       /* if you need animations */
+
+/* ---------- Dark-mode variant ---------- */
+@custom-variant dark (&:is(.dark *));
+
+/* ---------- Theme definition ---------- */
+@theme inline {
+  /* Spacing & Radius */
+  --radius: 0.75rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Core Cybersecurity Palette */
+  --color-background: hsl(220 27% 8%);
+  --color-foreground: hsl(220 9% 95%);
+
+  --color-card: hsl(220 25% 10%);
+  --color-card-foreground: hsl(220 9% 95%);
+
+  --color-popover: hsl(220 25% 12%);
+  --color-popover-foreground: hsl(220 9% 95%);
+
+  --color-primary: hsl(200 100% 60%);
+  --color-primary-foreground: hsl(220 27% 8%);
+
+  --color-secondary: hsl(220 20% 15%);
+  --color-secondary-foreground: hsl(220 9% 85%);
+
+  --color-muted: hsl(220 20% 15%);
+  --color-muted-foreground: hsl(220 9% 55%);
+
+  --color-accent: hsl(170 100% 55%);
+  --color-accent-foreground: hsl(220 27% 8%);
+
+  --color-destructive: hsl(0 85% 60%);
+  --color-destructive-foreground: hsl(220 9% 95%);
+
+  --color-warning: hsl(35 100% 60%);
+  --color-warning-foreground: hsl(220 27% 8%);
+
+  --color-success: hsl(140 85% 55%);
+  --color-success-foreground: hsl(220 27% 8%);
+
+  --color-border: hsl(220 20% 18%);
+  --color-input: hsl(220 20% 15%);
+  --color-ring: hsl(200 100% 60%);
+
+  /* Cyber-specific extras */
+  --color-cyber-grid: hsl(200 100% 60%);
+  --color-cyber-glow: hsl(170 100% 55%);
+  --color-threat-critical: hsl(0 85% 60%);
+  --color-threat-high: hsl(15 100% 60%);
+  --color-threat-medium: hsl(35 100% 60%);
+  --color-threat-low: hsl(60 100% 60%);
+  --color-secure: hsl(140 85% 55%);
+
+  /* Gradients */
+  --gradient-cyber: linear-gradient(135deg,
+      hsl(200 100% 60% / 0.1),
+      hsl(170 100% 55% / 0.1));
+  --gradient-alert: linear-gradient(135deg,
+      hsl(0 85% 60% / 0.2),
+      hsl(15 100% 60% / 0.1));
+  --gradient-secure: linear-gradient(135deg,
+      hsl(140 85% 55% / 0.1),
+      hsl(120 80% 50% / 0.1));
+
+  /* Shadows */
+  --shadow-cyber: 0 0 20px hsl(200 100% 60% / 0.3);
+  --shadow-alert: 0 0 20px hsl(0 85% 60% / 0.3);
+  --shadow-glow: 0 0 30px hsl(170 100% 55% / 0.4);
+
+  /* Animations */
+  --transition-cyber: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Dark mode overrides ---------- */
+.dark {
+  --color-background: hsl(220 27% 8%);
+  --color-foreground: hsl(220 9% 95%);
+
+  --color-card: hsl(220 25% 10%);
+  --color-card-foreground: hsl(220 9% 95%);
+
+  --color-popover: hsl(220 25% 12%);
+  --color-popover-foreground: hsl(220 9% 95%);
+
+  --color-primary: hsl(200 100% 60%);
+  --color-primary-foreground: hsl(220 27% 8%);
+
+  --color-secondary: hsl(220 20% 15%);
+  --color-secondary-foreground: hsl(220 9% 85%);
+
+  --color-muted: hsl(220 20% 15%);
+  --color-muted-foreground: hsl(220 9% 55%);
+
+  --color-accent: hsl(170 100% 55%);
+  --color-accent-foreground: hsl(220 27% 8%);
+
+  --color-destructive: hsl(0 85% 60%);
+  --color-destructive-foreground: hsl(220 9% 95%);
+
+  --color-border: hsl(220 20% 18%);
+  --color-input: hsl(220 20% 15%);
+  --color-ring: hsl(200 100% 60%);
+}
+
+/* ---------- Base layer ---------- */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Cyber UI Enhancements */
+  .cyber-grid {
+    background-image:
+      linear-gradient(rgba(0,136,255,0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,136,255,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .glow-effect {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .threat-pulse {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.7; }
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: hsl(var(--color-muted)); }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--color-border));
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--color-primary) / 0.8);
+  }
+}
